@@ -1,5 +1,6 @@
-require 'stringio'
 require 'daytime'
+require 'conductor/jobs'
+require 'conductor/jobs_text_presenter'
 
 module Conductor
 

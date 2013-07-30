@@ -1,13 +1,6 @@
-module Conductor
-	module JobStatus
-		NONE = 0
-		WAIT = 1
-		EXEC = 2
-		FAIL = 3
-		SUCC = 4
-		CNCL = 5
-	end
+require 'conductor/job_status'
 
+module Conductor
 	class Job
 		attr_reader :name, :desc, :deps, :command, :pid
 

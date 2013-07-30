@@ -9,9 +9,9 @@ Gem::Specification.new do |s|
 	s.summary      = 'basic job scheduler'
 	s.description  = 'Simplistic job scheduler with inter-job dependencies'
 
-	s.files          = `find . -print`.split("\n")
+	s.files          = `find ./lib -print`.split("\n")
 	s.executables    = []
-	s.test_files     = `ls -1 spec/*`.split("\n")
+	s.test_files     = `fine ./spec -print`.split("\n")
 	s.require_paths  = ['lib']
 
 	s.add_dependency 'daytime'
