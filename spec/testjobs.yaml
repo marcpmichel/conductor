@@ -1,0 +1,49 @@
+--- 
+:jobs:
+    - :name: "first job"
+      :desc: "this is the first job"
+      :command: "sleep 5"
+      :deps:
+
+    - :name: "second job"
+      :desc: "this is the second job"
+      :command: "sleep 3"
+      :deps: 
+      - :type: :delay
+        :param: 15
+
+    - :name: "third job"
+      :desc: "this is the third job"
+      :command: "sleep 3"
+      :deps: 
+      - :type: :job
+        :param: "first job"
+
+    - :name: "fourth job"
+      :desc: "this is the fourth job"
+      :command: "sleep 3"
+      :deps: 
+      - :type: :job
+        :param: "first job"
+
+    - :name: "fifth job"
+      :desc: "this is the fifth job"
+      :command: "sleep 3"
+      :deps: 
+      - :type: :job
+        :param: "second job"
+
+    - :name: "sixth job"
+      :desc: "this is the sixth job"
+      :command: "sleep 3; exit 2"
+      :deps: 
+      - :type: :job
+        :param: "first job"
+
+    - :name: "seventh job"
+      :desc: "this is the seventh job"
+      :command: "sleep 3; exit 0"
+      :deps: 
+      - :type: :job
+        :param: "sixth job"
+
