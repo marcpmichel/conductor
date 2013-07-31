@@ -17,7 +17,8 @@ module Conductor
 		end
 
 		def go?
-			not(ran?) && @status != JobStatus::EXEC && @deps.all?(&:cleared?)
+			not(ran?) && not(running?) && 
+				@deps.all?{|dep| dep.cleared?(Runner::jobs)}
 		end
 
 		def ran?
@@ -25,7 +26,7 @@ module Conductor
 		end
 
 		def go!
-			@pid = spawn @command #, :out => [:child, @stdout], :err => [:child, @stderr]
+			@pid = Process::spawn @command #, :out => [:child, @stdout], :err => [:child, @stderr]
 			@status = JobStatus::EXEC
 			@last_start_at = Time.now
 		end
@@ -42,7 +43,7 @@ module Conductor
 		private :process_status
 
 		def done?
-			success? || failed?
+			success? || failed
 		end
 
 		def success?

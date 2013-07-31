@@ -1,8 +1,9 @@
+require 'daytime'
 
 module Conductor
 
 	class Dependency
-		def cleared?
+		def cleared?(jobs)
 			raise "base class"
 		end
 		def to_s
@@ -14,7 +15,7 @@ module Conductor
 		def initialize(time_string)
 			@at = Daytime.from_string(time_string)
 		end
-		def cleared?
+		def cleared?(jobs)
 			Daytime.from_time(Time.now) > @at
 		end
 		def to_s
@@ -22,12 +23,13 @@ module Conductor
 		end
 	end
 
+	# for testing purposes
 	class DelayDependency < Dependency
 		def initialize(delay_in_seconds)
 			@delay = delay_in_seconds
 			@dep = TimeDependency.new((Time.now + delay_in_seconds).strftime("%H:%M:%S"))
 		end
-		def cleared?
+		def cleared?(jobs)
 			@dep.cleared?
 		end
 		def to_s
@@ -40,8 +42,8 @@ module Conductor
 			@jobname = jobname
 			@options = options
 		end
-		def cleared?
-			job = Jobs::find_by_name(@jobname)
+		def cleared?(jobs)
+			job = jobs.find_by_name(@jobname)
 			@options[:ignore_fail] ? job.done? : job.success?
 		end
 		def to_s

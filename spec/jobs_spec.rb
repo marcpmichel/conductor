@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-include Conductor
-
 describe Jobs do
 
 	before :all do
@@ -24,8 +22,17 @@ describe Jobs do
 	it "find running jobs" do
 		jobs = Jobs.new
 		test_job = Job.new("abcd")
-		#test_job.status = JobStatus::EXEC
+		test_job.stub(:running?).and_return true
+		jobs.push test_job
 		jobs.running.should == [ test_job ]
+	end
+
+	it "finds jobs which are ready to start" do
+		jobs = Jobs.new
+		test_job = Job.new("abcd")
+		test_job.stub(:go?).and_return true
+		jobs.push test_job
+		jobs.ready_to_start.should == [ test_job ]
 	end
 
 	it "loads jobs from a yaml file" do
