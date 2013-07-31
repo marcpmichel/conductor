@@ -1,9 +1,8 @@
 require 'conductor/jobs'
-require 'conductor/jobs_text_presenter'
 
 module Conductor
 
-	class Runner
+	class Conductor
 		class << self
 			@@jobs = Jobs.new
 			@@presenter = nil
@@ -16,23 +15,25 @@ module Conductor
 				@@jobs.push(job)
 			end
 
-			def presenter_class=(presenter_class)
-				@@presenter = presenter_class.new(@@jobs)
+			def presenter=(presenter)
+				@@presenter = presenter
+			end
+
+			def find_job(job_name)
+				@@jobs.find_by_name(job_name)
 			end
 
 			def jobs
 				@@jobs
 			end
 
-			def run
+			def conduct
 				loop do
-					@@presenter.redraw if !!@@presenter
-
+					@@presenter.redraw(@@jobs) if !!@@presenter
 					@@jobs.ready_to_start.each(&:go!)
 
 					break if should_stop?
 
-					#puts "#{Jobs.running.count} jobs still running."
 					sleep 1
 				end
 			end

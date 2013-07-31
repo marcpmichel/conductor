@@ -10,8 +10,8 @@ describe Job do
 		@default_job.name.should == "job name"
 	end
 
-	it "checks if it is ready to go" do
-		@default_job.go?.should be_true
+	it "checks if all deps are cleared" do
+		@default_job.all_deps_cleared?.should be_true
 	end
 
 	it "check if it has ran" do

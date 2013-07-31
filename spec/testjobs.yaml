@@ -3,14 +3,14 @@
     - :name: "first job"
       :desc: "this is the first job"
       :command: "sleep 5"
-      :deps:
+      :deps: []
 
     - :name: "second job"
       :desc: "this is the second job"
       :command: "sleep 3"
       :deps: 
-      - :type: :delay
-        :param: 15
+      - :type: :time
+        :param: "15:00"
 
     - :name: "third job"
       :desc: "this is the third job"

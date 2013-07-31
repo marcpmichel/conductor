@@ -5,8 +5,8 @@ module Conductor
 
 	class Jobs < Array
 
-		def find_by_name(given_name)
-			self.find { |job| job.name == given_name }
+		def find_by_name(name)
+			self.find { |job| job.name == name }
 		end
 
 		def running
@@ -18,30 +18,34 @@ module Conductor
 		end
 
 		def ready_to_start
-			self.select(&:go?)
+			#self.select(&:go?)
+			self.select do |job| 
+				not(job.ran?) && not(job.running?) && job.all_deps_cleared?
+			end 
 		end
 
 		def load(filename)
 			yaml = YAML::load_file(filename)
-			yaml[:jobs].each do |job|
-				self.push Job.new({:name => job[:name], :desc => job[:desc], :command => job[:command], :deps => deps(job)})
+			yaml[:jobs].each do |jobdef|
+				self.push Job.new( jobdef[:name], jobdef[:desc], jobdef[:command], deps(jobdef))
 			end
-			#puts "added #{@@jobs.count} jobs"
 			self.count
 		end
 
-		def deps(job)
-			return [] if job[:deps].nil?
 
-			job[:deps].map do |dep|
+		private
+
+		def deps(jobdef)
+			return [] if jobdef[:deps].nil?
+
+			jobdef[:deps].map do |dep|
 				case dep[:type]
-					when :delay then DelayDependency.new(dep[:param])
 					when :job then JobDependency.new(dep[:param])
+					when :time then TimeDependency.new(dep[:param])
 					else raise "Unknown dependency type"
 				end
 			end
 		end
-		private :deps
 
 	end
 end

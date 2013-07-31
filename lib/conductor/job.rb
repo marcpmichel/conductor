@@ -16,10 +16,9 @@ module Conductor
 			# @stderr = IO.new
 		end
 
-		def go?
-			not(ran?) && not(running?) && 
-				@deps.all?{|dep| dep.cleared?(Runner::jobs)}
-		end
+		def all_deps_cleared?
+				@deps.all?(&:cleared?)
+	  end
 
 		def ran?
 			not @last_start_at.nil? 
