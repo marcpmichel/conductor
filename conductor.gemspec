@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
 
 	s.files          = `find ./lib -print`.split("\n")
 	s.executables    = []
-	s.test_files     = `fine ./spec -print`.split("\n")
+	s.test_files     = `find ./spec -print`.split("\n")
 	s.require_paths  = ['lib']
 
 	s.add_dependency 'daytime'
