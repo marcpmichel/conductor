@@ -3,8 +3,6 @@ module Conductor
 
 	class JobDependency
 
-		attr_accessor :job
-
 		def initialize(jobname, options={:ignore_fail => false })
 			@jobname = jobname
 			@options = options
@@ -12,7 +10,7 @@ module Conductor
 
 		def cleared?
 			other_job = Conductor::find_job(@jobname)
-			@options[:ignore_fail] ? job.done? : job.success?
+			@options[:ignore_fail] ? other_job.done? : other_job.success?
 		end
 
 		def to_s
@@ -24,8 +22,6 @@ module Conductor
 	require 'daytime'
 
 	class TimeDependency
-
-		attr_accessor :job
 
 		def initialize(time_string)
 			@at = Daytime.from_string(time_string)

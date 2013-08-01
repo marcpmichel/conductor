@@ -4,6 +4,12 @@ module Conductor
 	class Job
 		attr_reader :name, :desc, :deps, :command, :pid
 
+		def self.from_hash(hash)
+			jobdef = { name:"undefined", desc: "", command: "exit 0", deps: [] }.merge(hash)
+			Job.new( jobdef[:name], jobdef[:desc], jobdef[:command], jobdef[:deps] )
+		end
+
+
 		def initialize(name="job name", desc="description", command="echo hello", deps=[])
 			@name = name
 			@desc = desc
