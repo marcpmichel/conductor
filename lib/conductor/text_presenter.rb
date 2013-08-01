@@ -6,8 +6,8 @@ module Conductor
 		def present(jobs)
 			puts TextPresenter::Job.hr
 			puts TextPresenter::Job.header
-			jobs.each { |job| puts JobTextPresenter.of(job).row }
-			puts JobTextPresenter.hr
+			jobs.each { |job| puts TextPresenter.of(job).row }
+			puts TextPresenter.hr
 		end
 
 		private
