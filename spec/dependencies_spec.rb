@@ -12,6 +12,10 @@ describe Dependencies do
 		deps.count.should == 2
 		deps.first.should be_a(TimeDependency)
 	end
+
+	it "vomits if there's a parsing error" do
+		lambda { Dependencies.parse("vomit, you parser !")}.should raise_error(RuntimeError)
+	end
 end
 
 describe JobDependency do

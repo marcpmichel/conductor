@@ -15,7 +15,7 @@ module Conductor
 				parse_error(dep, "syntax error") if parsed.nil? || parsed.captures.count != 2
 				case parsed[1]
 					when "success" then JobDependency.new(parsed[2])
-					when "after" then JobDependency.new(parsed[2])
+					when "after" then JobDependency.new(parsed[2], {:ignore_fail => true} )
 					when "at" then TimeDependency.new(parsed[2])
 					else parse_error(dep, "unknown dependency type")
 				end
