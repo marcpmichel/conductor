@@ -18,33 +18,18 @@ module Conductor
 		end
 
 		def ready_to_start
-			#self.select(&:go?)
-			self.select do |job| 
-				not(job.ran?) && not(job.running?) && job.all_deps_cleared?
-			end 
+			self.select(&:go?)
+			# self.select do |job| 
+			# 	not(job.ran?) && not(job.running?) && job.all_deps_cleared?
+			# end 
 		end
 
 		def load(filename)
 			yaml = YAML::load_file(filename)
 			yaml[:jobs].each do |jobdef|
-				self.push Job.new( jobdef[:name], jobdef[:desc], jobdef[:command], deps(jobdef))
+				self.push Job.from_hash(jobdef)
 			end
 			self.count
-		end
-
-
-		private
-
-		def deps(jobdef)
-			return [] if jobdef[:deps].nil?
-
-			jobdef[:deps].map do |dep|
-				case dep[:type]
-					when :job then JobDependency.new(dep[:param])
-					when :time then TimeDependency.new(dep[:param])
-					else raise "Unknown dependency type"
-				end
-			end
 		end
 
 	end

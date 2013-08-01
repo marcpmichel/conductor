@@ -4,20 +4,24 @@ module Conductor
 	class TextPresenter
 
 		def present(jobs)
-			puts TextPresenter::Job.hr
-			puts TextPresenter::Job.header
-			jobs.each { |job| puts TextPresenter.of(job).row }
-			puts TextPresenter.hr
+			puts to_s(jobs)
 		end
 
-		private
+		def to_s(jobs)
+			"#{hr}\n#{header}\n#{hr}\n#{rows(jobs)}\n#{hr}\n"
+		end
+
+		def rows(jobs)
+			jobs.map { |job| row(job) }.join('\n')
+		end
 
 		def row_format
 			"| %-20s| %-9s| %-40s|"
 		end
 
 		def header
-			"\e[7m" + row_format % ["  job name", "status", "  dependencies"] + "\e[27m"
+			#"\e[7m" + row_format % ["  job name", "status", "  dependencies"] + "\e[27m"
+			row_format % ["  job name", "status", "  dependencies"]
 		end
 
 		def hr

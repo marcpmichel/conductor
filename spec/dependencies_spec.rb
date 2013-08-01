@@ -1,11 +1,24 @@
 
 require 'spec_helper'
 
+describe Dependencies do
+	it "parses one dependency" do
+		deps = Dependencies.parse_dep("success(pouet)")
+		deps.should be_a(JobDependency)
+	end
+
+	it "parses multiple dependencies" do
+		deps = Dependencies.parse("at(13_37), after(math)")
+		deps.count.should == 2
+		deps.first.should be_a(TimeDependency)
+	end
+end
+
 describe JobDependency do
 
 	it "clears" do
 		dep = JobDependency.new("one")
-		jobdef = { name:"one", deps:[dep] }
+		jobdef = { name:"one", deps:"after(one)" }
 		Conductor.add_job(jobdef) 
 		job = Conductor::find_job("one")
 		job.stub(:success?).and_return true

@@ -28,7 +28,7 @@ describe Job do
 	end
 
 	it "create an instance from a hash" do
-		jobdef = { name: "jobname", desc: "description", command: "ls", deps: [] }
+		jobdef = { name: "jobname", desc: "description", command: "ls", deps:""  }
 		job = Job.from_hash( jobdef )
 		job.name.should == "jobname"
 		job.command.should == "ls"

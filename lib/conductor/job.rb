@@ -5,10 +5,9 @@ module Conductor
 		attr_reader :name, :desc, :deps, :command, :pid
 
 		def self.from_hash(hash)
-			jobdef = { name:"undefined", desc: "", command: "exit 0", deps: [] }.merge(hash)
-			Job.new( jobdef[:name], jobdef[:desc], jobdef[:command], jobdef[:deps] )
+			jobdef = { name:"undefined", desc: "", command: "exit 0", deps: "" }.merge(hash)
+			Job.new( jobdef[:name], jobdef[:desc], jobdef[:command], Dependencies.parse(jobdef[:deps]) )
 		end
-
 
 		def initialize(name="job name", desc="description", command="echo hello", deps=[])
 			@name = name
@@ -24,7 +23,11 @@ module Conductor
 
 		def all_deps_cleared?
 				@deps.all?(&:cleared?)
-	  end
+		end
+	
+		def go?
+			not(ran?) && not(running?) && all_deps_cleared?
+		end
 
 		def ran?
 			not @last_start_at.nil? 

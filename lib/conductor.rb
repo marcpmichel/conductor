@@ -1,4 +1,5 @@
 require 'conductor/jobs'
+require 'conductor/text_presenter'
 
 module Conductor
 
@@ -28,13 +29,18 @@ module Conductor
 
 		def conduct
 			loop do
-				@@presenter.redraw(@@jobs) if !!@@presenter
+				present_jobs
 				@@jobs.ready_to_start.each(&:go!)
 
 				break if should_stop?
 
 				sleep 1
 			end
+			present_jobs
+		end
+
+		def present_jobs
+			@@presenter.present(@@jobs) if !!@@presenter
 		end
 
 		def reset_jobs

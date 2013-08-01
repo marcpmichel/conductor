@@ -1,6 +1,33 @@
 
 module Conductor
 
+	class Dependencies
+		class  << self
+			
+			def parse(deps)
+				deps.split(',').map do |dep|
+					parse_dep(dep)
+				end
+			end
+
+			def parse_dep(dep)
+				parsed = /(\w+)\((.*)\)/.match(dep.strip)
+				parse_error(dep, "syntax error") if parsed.nil? || parsed.captures.count != 2
+				case parsed[1]
+					when "success" then JobDependency.new(parsed[2])
+					when "after" then JobDependency.new(parsed[2])
+					when "at" then TimeDependency.new(parsed[2])
+					else parse_error(dep, "unknown dependency type")
+				end
+			end
+
+			def parse_error(dep, message)
+				raise %Q|Error while parsing dependency "#{dep}" : #{message}|
+			end
+
+		end
+	end
+
 	class JobDependency
 
 		def initialize(jobname, options={:ignore_fail => false })
