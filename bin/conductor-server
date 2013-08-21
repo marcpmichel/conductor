@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+require 'conductor'
+require 'conductor/server'
+
+include Conductor
+
+Server::start
+

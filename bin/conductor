@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+require 'conductor/client'
+
+include Conductor
+
+Client::start
+
+

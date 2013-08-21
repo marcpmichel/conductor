@@ -1,13 +1,35 @@
 require 'conductor/job_status'
 
 module Conductor
+
+	class JobBuilder
+
+		def initialize(conductor)
+			@conductor = conductor
+		end
+
+		def build(jobdef)
+			jobdef = { name:"undefined", desc: "", command: "exit 1", deps: "" }.merge(jobdef)
+			Job.new( jobdef[:name], jobdef[:desc], jobdef[:command], dependencies(jobdef[:deps]) )
+		end
+
+		private
+
+		def dependencies(dep_defs)
+		 dependencies_definitions(dep_defs).map do |dep_def|
+			DependencyBuilder.new(@conductor).build(dep_def)
+		 end
+		end
+
+		def dependencies_definitions(dep_defs)
+				return [] if dep_defs.nil?
+				dep_defs.split(',').map(&:strip)
+		end
+
+	end
+
 	class Job
 		attr_reader :name, :desc, :deps, :command, :pid
-
-		def self.from_hash(hash)
-			jobdef = { name:"undefined", desc: "", command: "exit 0", deps: "" }.merge(hash)
-			Job.new( jobdef[:name], jobdef[:desc], jobdef[:command], Dependencies.parse(jobdef[:deps]) )
-		end
 
 		def initialize(name="job name", desc="description", command="echo hello", deps=[])
 			@name = name
@@ -22,7 +44,7 @@ module Conductor
 		end
 
 		def all_deps_cleared?
-				@deps.all?(&:cleared?)
+			@deps.all?(&:cleared?)
 		end
 	
 		def go?

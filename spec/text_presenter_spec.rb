@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+require 'conductor/text_presenter'
+
 describe TextPresenter do
 	
 	before :all do
