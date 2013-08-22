@@ -59,23 +59,27 @@ module Conductor
 =end
 
 		def conduct
+			LOG.info("Starting to conduct...")
 			loop do
-				@jobs.select(&:go?).each(&:go!)
+				@jobs.values.select(&:go?).each(&:go!)
 
 				break if should_stop?
 
 				sleep 1
 			end
+			LOG.info("All jobs done.")
 		end
 
-		def reset_jobs
+		def reset
 			@jobs.clear
+			@deps.clear
+			LOG.info "jobs and deps were resetted"
 		end
 
 		private
 
 		def should_stop?
-			@jobs.all?(&:ran?) && @jobs.none?(&:running?)
+			@jobs.values.all?(&:ran?) && @jobs.values.none?(&:running?)
 		end
 
 	end
